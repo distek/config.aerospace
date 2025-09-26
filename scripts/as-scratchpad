@@ -1,0 +1,124 @@
+#!/bin/bash
+
+set -e
+
+TRUE=0
+FALSE=1
+
+# {
+#   "app-bundle-id": "org.alacritty",
+#   "app-name": "Alacritty",
+#   "window-id": 19454,
+#   "window-title": "VIMNOTES"
+# }
+WINFMT='%{app-bundle-id} %{app-name} %{window-title} %{window-id}'
+
+QUERY='.scratchpads[] | select(.name == "'$1'")'
+
+# could replace with yq "$QUERY" < /path/to/scratchpads.yml
+progYAML=$(echo '
+scratchpads:
+  - name: "spotify"
+    app: "Spotify"
+    open-command: "open /Applications/Spotify.app"
+  - name: "calendar"
+    app: "Calendar"
+    open-command: "open /System/Applications/Calendar.app"
+  - name: "scratchpad"
+    title: "^SCRATCHPAD$"
+    app: "Alacritty"
+    open-command: "/Applications/Alacritty.app/Contents/MacOS/alacritty -t SCRATCHPAD --option window.dimensions.columns=90 --option window.dimensions.lines=40 -e bash -c ~/.local/bin/scratch"
+  - name: "notes"
+    title: "^VIMNOTES$"
+    app: "Alacritty"
+    open-command: "/Applications/Alacritty.app/Contents/MacOS/alacritty -t VIMNOTES --option window.dimensions.columns=110 --option window.dimensions.lines=40 -e /bin/bash -c ~/.local/bin/wiki"
+  - name: "obsidian"
+    title: "Obsidian"
+    app: "Obsidian"
+    open-command: "open /Applications/Obsidian.app"
+  - name: "terminal"
+    title: "^SCRATCHTERM$"
+    app: "Alacritty"
+    open-command: "/Applications/Alacritty.app/Contents/MacOS/alacritty -t SCRATCHTERM --option window.dimensions.columns=90 --option window.dimensions.lines=40"
+  - name: "rocket-chat"
+    app: "Rocket.Chat"
+    open-command: "open /Applications/Rocket.Chat.app"
+  - name: "discord"
+    app: "Discord"
+    open-command: "open /Applications/Discord.app"
+  - name: "messages"
+    app: "Messages"
+    open-command: "open /System/Applications/Messages.app"
+' | yq "$QUERY")
+
+currentWorkspace=$(aerospace list-workspaces --focused)
+workspaceApps=$()
+progApp="$(echo "$progYAML" | yq '.app')"
+progTitle="$(echo "$progYAML" | yq '.title')"
+progWID=""
+
+moveToScratchpad() {
+	# If you always want it to go away, even if not focused, comment this out
+	if [[ "$(aerospace list-windows --focused --format '%{window-id}')" != "$1" ]]; then
+		aerospace focus --window-id "$1"
+		return
+	fi
+	aerospace move-node-to-workspace --window-id "$1" scratchpad
+}
+
+moveToWorkspace() {
+	aerospace move-node-to-workspace --window-id "$1" "$2"
+	aerospace focus --window-id "$1"
+}
+
+queryWorkspace() {
+	IFS=$'\n'
+	for i in $(aerospace list-windows --json --format $WINFMT --workspace "$1" | jq '.[]' | jq -c); do
+		if [[ "$(echo "$i" | jq -r '."app-name"')" == "$progApp" ]]; then
+			bID=$(echo "$i" | jq -r '."app-bundle-id"')
+			wID=$(echo "$i" | jq -r '."window-id"')
+
+			# If the prog title isn't empty, we need to be specific
+			if [ ! -z "$progTitle" ] && [[ "$progTitle" != "null" ]]; then
+				if echo "$i" | jq -r '."window-title"' | grep -q "$progTitle"; then
+					progWID="$wID"
+					return $TRUE
+				fi
+			else
+				progWID="$wID"
+				return $TRUE
+			fi
+		fi
+	done
+
+	set +x
+	return $FALSE
+}
+
+main() {
+	if queryWorkspace $currentWorkspace; then
+		moveToScratchpad "$progWID"
+
+		return
+	fi
+
+	if queryWorkspace "scratchpad"; then
+		moveToWorkspace "$progWID" "$currentWorkspace"
+
+		return
+	fi
+
+	# We didn't find the window, try looking elsewhere
+	for i in $(aerospace list-workspaces --all | grep -v scratchpad); do
+		if queryWorkspace "$i"; then
+			moveToWorkspace "$progWID" "$currentWorkspace"
+
+			return
+		fi
+	done
+
+	# We couldn't find it, open it.
+	eval "$(echo "$progYAML" | yq '."open-command"')"
+}
+
+main

@@ -1,0 +1,223 @@
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = false
+
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+# exec-on-workspace-change = ['/bin/bash', '-c',
+#     '/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE'
+# ]
+
+default-root-container-layout = 'tiles'
+
+automatically-unhide-macos-hidden-apps = false
+
+exec-on-workspace-change = ['/bin/bash', '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; $HOME/.local/bin/no-scratchpad' ]
+
+[gaps]
+inner.horizontal = 20
+inner.vertical =   20
+outer.left =       20
+outer.bottom =     20
+outer.top =        [{ monitor."^built-in retina display$" = 20 }, 55]
+outer.right =      20
+
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Messages'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.MobileSMS'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'chat.rocket'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'org.alacritty'
+if.window-title-regex-substring = '^VIMNOTES$'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'org.alacritty'
+if.window-title-regex-substring = '^SCRATCHPAD$'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'org.alacritty'
+if.window-title-regex-substring = '^SCRATCHTERM$'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Notes'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.iCal'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.AppStore'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.audio.AudioMIDISetup'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.calculator'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.clock'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.AddressBook'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.DiskUtility'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.docker.docker'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.FaceTime'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.findmy'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.keychainaccess'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Music'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Preview'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.reminders'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ScreenContinuity'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'org.godotengine.godot'
+check-further-callbacks = false
+run = ['layout floating']
+
+[[on-window-detected]]
+if.window-title-regex-substring='FL Studio 2024'
+if.during-aerospace-startup = false #set it to false explicitly 
+check-further-callbacks = false
+run = ['layout floating']
+#if.app-id = 'com.image-line.flstudio'
+
+[mode.main.binding]
+    cmd-enter = '''exec-and-forget /Applications/Alacritty.app/Contents/MacOS/alacritty'''
+
+    # i3 wraps focus by default
+    cmd-h = 'focus --ignore-floating --boundaries all-monitors-outer-frame left'
+    cmd-j = 'focus --ignore-floating --boundaries all-monitors-outer-frame down'
+    cmd-k = 'focus --ignore-floating --boundaries all-monitors-outer-frame up'
+    cmd-l = 'focus --ignore-floating --boundaries all-monitors-outer-frame right'
+
+    cmd-shift-h = 'move left'
+    cmd-shift-j = 'move down'
+    cmd-shift-k = 'move up'
+    cmd-shift-l = 'move right'
+
+    cmd-shift-f = 'fullscreen'
+
+    cmd-shift-space = 'layout floating tiling' # 'floating toggle' in i3
+
+    cmd-1 = 'workspace 1'
+    cmd-2 = 'workspace 2'
+    cmd-3 = 'workspace 3'
+    cmd-4 = 'workspace 4'
+    cmd-5 = 'workspace 5'
+    cmd-6 = 'workspace 6'
+    cmd-7 = 'workspace 7'
+    cmd-8 = 'workspace 8'
+    cmd-9 = 'workspace 9'
+    cmd-0 = 'workspace 10'
+
+    cmd-shift-1 = 'move-node-to-workspace 1'
+    cmd-shift-2 = 'move-node-to-workspace 2'
+    cmd-shift-3 = 'move-node-to-workspace 3'
+    cmd-shift-4 = 'move-node-to-workspace 4'
+    cmd-shift-5 = 'move-node-to-workspace 5'
+    cmd-shift-6 = 'move-node-to-workspace 6'
+    cmd-shift-7 = 'move-node-to-workspace 7'
+    cmd-shift-8 = 'move-node-to-workspace 8'
+    cmd-shift-9 = 'move-node-to-workspace 9'
+    cmd-shift-0 = 'move-node-to-workspace 10'
+
+    cmd-shift-c = 'reload-config'
+
+    cmd-r = 'mode resize'
+
+    cmd-q = 'close'
+
+    # `cmd-n = 'exec-and-forget as-scratchpad --name notes'
+
+[mode.resize.binding]
+    h = 'resize width -50'
+    j = 'resize height +50'
+    k = 'resize height -50'
+    l = 'resize width +50'
+    enter = 'mode main'
+    esc = 'mode main'
