@@ -2,16 +2,14 @@ enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = false
 
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-# exec-on-workspace-change = ['/bin/bash', '-c',
-#     '/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE'
-# ]
-
 default-root-container-layout = 'tiles'
 
 automatically-unhide-macos-hidden-apps = false
 
-exec-on-workspace-change = ['/bin/bash', '-c',
-  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; $HOME/.local/bin/no-scratchpad' ]
+exec-on-workspace-change = ['/bin/bash', '-c', '$HOME/.config/aerospace/scripts/exec-on-workspace-change' ]
+
+[workspace-to-monitor-force-assignment]
+1 = 'main'
 
 [gaps]
 inner.horizontal = 20

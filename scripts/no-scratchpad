@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ "$(aerospace list-workspaces --focused)" == "scratchpad" ]]; then
+	# grab whatever caused this to happen in scratchpad workspace
+	focusedWin="$(aerospace list-windows --focused --format '%{window-id}')"
+	echo "$focusedWin"
+	# send user back to normal workspace
+	aerospace workspace-back-and-forth
+	# move scratchpad to current space
+	aerospace move-node-to-workspace --window-id "$focusedWin"
+fi
