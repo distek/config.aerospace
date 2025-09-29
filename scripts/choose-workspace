@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -x
+count=$(aerospace list-windows --workspace "$1" | wc -l | tr -d '[:space:]')
+
+if ((count > 0)); then
+	aerospace workspace "$1"
+	exit
+fi
+
+currentMonitor=$(aerospace list-monitors --focused --format "%{monitor-id}")
+
+wsMonitor=$(aerospace list-workspaces --all --format '%{workspace},%{monitor-id}' | grep "^$1," | cut -d',' -f2)
+
+if ((currentMonitor != wsMonitor)); then
+	aerospace move-workspace-to-monitor --workspace $1 $currentMonitor
+	aerospace workspace "$1"
+else
+	aerospace workspace "$1"
+fi

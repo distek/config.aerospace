@@ -1,15 +1,14 @@
 enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = false
 
-on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 default-root-container-layout = 'tiles'
+
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+on-focus-changed = ['move-mouse window-lazy-center']
 
 automatically-unhide-macos-hidden-apps = false
 
 exec-on-workspace-change = ['/bin/bash', '-c', '$HOME/.config/aerospace/scripts/exec-on-workspace-change' ]
-
-[workspace-to-monitor-force-assignment]
-1 = 'main'
 
 [gaps]
 inner.horizontal = 20

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+lastCount=1
+while true; do
+	count=$(aerospace list-monitors | wc -l | tr -d '[:space:]')
+	if ((count != lastCount)); then
+		echo "Change detected"
+		lastCount=$count
+		sketchybar --reload
+	fi
+
+	sleep 1
+done
